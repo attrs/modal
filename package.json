@@ -2,7 +2,7 @@
   "name": "x-modal",
   "version": "0.0.0",
   "description": "x-modal",
-  "main": "lib/index.js",
+  "main": "lib/modal.js",
   "web": "dist/x-modal.min.js",
   "repository": "attrs/x-modal",
   "author": "joje <joje.attrs@gmail.com>",

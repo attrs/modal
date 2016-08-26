@@ -20,7 +20,7 @@ gulp.task('build.webpack', ['build.js.clean'], () => {
   var conf = require('./webpack.config.js');
   delete conf.output.path;
   
-  return gulp.src('lib/index.js')
+  return gulp.src('lib/modal.js')
     .pipe(webpack(conf))
     .pipe(gulp.dest(dist));
 });

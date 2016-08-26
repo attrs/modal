@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: path.join(__dirname, 'lib/index.js'),
+  entry: path.join(__dirname, 'lib/modal.js'),
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'x-modal.js',

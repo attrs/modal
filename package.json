@@ -2,8 +2,7 @@
   "name": "x-modal",
   "version": "0.0.0",
   "description": "x-modal",
-  "main": "lib/modal.js",
-  "web": "dist/x-modal.min.js",
+  "main": "lib/index.js",
   "repository": "attrs/x-modal",
   "author": "joje <joje.attrs@gmail.com>",
   "homepage": "https://github.com/attrs/x-modal",
@@ -11,7 +10,7 @@
   "keywords": [],
   "files": [
     "dist",
-    "modal.js",
+    "lib",
     "LICENSE",
     "README.md"
   ],

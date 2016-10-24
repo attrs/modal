@@ -10,17 +10,20 @@ module.exports = {
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
-  externals: {
-    jquery: 'jQuery'
-  },
   module: {
     loaders: [
       {
         test: /\.css$/,
         loader: 'style!css'
       }, {
+        test: /\.less$/,
+        loader: 'style!css!less'
+      }, {
         test: /\.(jpg|png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'url'
+      }, {
+        test: /\.html$/,
+        loader: 'html'
       }
     ]
   },

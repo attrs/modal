@@ -67,7 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  mask.style.top = mask.style.bottom = mask.style.left = mask.style.right = 0;
 	  mask.style.opacity = 0;
 	  mask.style.zIndex = z++;
-	  mask.style.overflow = 'auto';
+	  mask.style.overflow = 'hidden';
 	  mask.style.transition = 'opacity .25s ease-in-out';
 	  
 	  return {
@@ -75,12 +75,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if( mask.parentNode !== document.body ) document.body.appendChild(mask);
 	      mask.style.display = 'block';
 	      mask.style.opacity = 1;
+	      document.body.style.overflowY = 'hidden';
 	      return this;
 	    },
 	    hide: function() {
 	      mask.style.opacity = 0;
 	      setTimeout(function() {
 	        mask.style.display = 'none';
+	        document.body.style.overflowY = null;
 	      }, 200);
 	      return this;
 	    }
@@ -110,9 +112,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  container.setAttribute('id', 'modal-' + id);
 	  container.className = 'x-modal-container';
 	  container.style.position = 'fixed';
-	  container.style.top = container.style.bottom = container.style.left = container.style.right = 0;
+	  container.style.top = container.style.left = container.style.right = container.style.bottom = 0;
 	  container.style.zIndex = z++;
-	  container.style.overflowY = 'scroll';
+	  container.style.overflowY = 'auto';
 	  container.style.transition = 'opacity .25s ease-in-out';
 	  container.onclick = function(e) {
 	    if( (e.target || e.srcElement) !== container ) return;
@@ -131,6 +133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  div.style.opacity = 0;
 	  div.style.width = typeof options.width === 'number' ? (options.width + 'px') : options.width;
 	  div.style.height = typeof options.height === 'number' ? (options.height + 'px') : options.height;
+	  if( options.background ) div.style.background = options.background;
 	  if( options.shadow !== false ) div.style.boxShadow = '0 5px 15px rgba(0,0,0,.5)';
 	  
 	  div.style.margin = (+options.margin || 0) + 'px auto';
@@ -227,10 +230,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    load(function(err, html) {
 	      if( err ) return done(err);
 	      
+	      console.log('options', options);
+	      
 	      create({
 	        id: options.id,
 	        cls: options.cls,
 	        style: options.style,
+	        background: options.background,
 	        closebtn: options.closebtn,
 	        closable: options.closable,
 	        shadow: options.shadow,

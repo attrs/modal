@@ -1,6 +1,6 @@
 {
   "name": "x-modal",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "x-modal",
   "main": "lib/index.js",
   "repository": "attrs/x-modal",

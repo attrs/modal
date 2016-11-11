@@ -58,17 +58,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(3);
 	
 	var z = 10000;
-	
 	var mask = (function() {
 	  var mask = document.createElement('div');
 	  mask.setAttribute('class', 'x-modal-mask');
-	  mask.style.background = 'rgba(0,0,0,.5)';
 	  mask.style.position = 'fixed';
 	  mask.style.top = mask.style.bottom = mask.style.left = mask.style.right = 0;
 	  mask.style.opacity = 0;
 	  mask.style.zIndex = z++;
 	  mask.style.overflow = 'hidden';
-	  mask.style.transition = 'opacity .25s ease-in-out';
 	  
 	  return {
 	    show: function() {
@@ -117,10 +114,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  container.style.zIndex = z++;
 	  container.style.overflowY = 'auto';
 	  container.style.transition = 'all .25s ease-in-out';
-	  container.onclick = function(e) {
-	    if( (e.target || e.srcElement) !== container ) return;
-	    handle.close();
-	  };
+	  if( options.maskbg !== false ) container.style.background = options.maskbg || 'rgba(0,0,0,.5)';
+	  
+	  if( options.closable !== false ) {
+	    container.onclick = function(e) {
+	      if( (e.target || e.srcElement) !== container ) return;
+	      handle.close();
+	    };
+	  }
 	  
 	  var div = document.createElement('div');
 	  if( css ) div.setAttribute('style', css);
@@ -320,6 +321,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        shadow: options.shadow,
 	        width: options.width || 700,
 	        height: options.height,
+	        maskbg: options.maskbg,
 	        margin: options.margin || 50
 	      }, function(err, handle) {
 	        if( err ) return done(err);

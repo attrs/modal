@@ -114,7 +114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  container.style.zIndex = z++;
 	  container.style.overflowY = 'auto';
 	  container.style.transition = 'all .25s ease-in-out';
-	  if( options.maskbg !== false ) container.style.background = options.maskbg || 'rgba(0,0,0,.5)';
+	  if( options.maskbg !== false ) container.style.background = (typeof options.maskbg == 'string') ? options.maskbg : 'rgba(0,0,0,.5)';
 	  
 	  if( options.closable !== false ) {
 	    container.onclick = function(e) {
@@ -136,7 +136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  div.style.width = typeof options.width === 'number' ? (options.width + 'px') : options.width;
 	  div.style.height = typeof options.height === 'number' ? (options.height + 'px') : options.height;
 	  if( options.background ) div.style.background = options.background;
-	  if( options.shadow !== false ) div.style.boxShadow = '0 5px 15px rgba(0,0,0,.5)';
+	  if( options.shadow !== false ) div.style.boxShadow = (typeof options.shadow == 'string') ? options.shadow : '0 5px 15px rgba(0,0,0,.5)';
 	  
 	  div.style.margin = (+options.margin || 0) + 'px auto';
 	  
@@ -319,9 +319,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        closebtn: options.closebtn,
 	        closable: options.closable,
 	        shadow: options.shadow,
+	        maskbg: options.maskbg,
 	        width: options.width || 700,
 	        height: options.height,
-	        maskbg: options.maskbg,
 	        margin: options.margin || 50
 	      }, function(err, handle) {
 	        if( err ) return done(err);

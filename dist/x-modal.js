@@ -55,7 +55,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var ajax = __webpack_require__(1);
-	__webpack_require__(3);
+	__webpack_require__(2);
 	
 	var z = 10000;
 	var mask = (function() {
@@ -228,7 +228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if( shell !== false && (title || icon || btns) ) shell = true;
 	  if( shell ) {
 	    var cls = shell.cls, style = shell.style;
-	    var shellhtml = __webpack_require__(7);
+	    var shellhtml = __webpack_require__(6);
 	    handle.target.innerHTML = shellhtml;
 	    handle.target = handle.body.querySelector('.x-modal-shell-body');
 	    handle.shell = {
@@ -394,9 +394,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {module.export = function(src, done) {
+	module.exports = function(src, done) {
 	  var xhr = win.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
 	  xhr.open('GET', src);
 	  xhr.onreadystatechange = function(e) {
@@ -408,35 +408,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	  xhr.send();
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(4);
+	var content = __webpack_require__(3);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(6)(content, {});
+	var update = __webpack_require__(5)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -453,10 +436,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(5)();
+	exports = module.exports = __webpack_require__(4)();
 	// imports
 	
 	
@@ -467,7 +450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/*
@@ -523,7 +506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -775,7 +758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"x-modal-shell\">\n  <div class=\"x-modal-shell-header\"></div>\n  <div class=\"x-modal-shell-body\"></div>\n  <div class=\"x-modal-shell-footer\"></div>\n</div>";

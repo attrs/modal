@@ -69,6 +69,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  
 	  return {
 	    show: function() {
+	      console.log('mask.show');
 	      if( mask.parentNode !== document.body ) document.body.appendChild(mask);
 	      mask.style.display = 'block';
 	      mask.style.opacity = 1;
@@ -77,10 +78,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    },
 	    hide: function() {
+	      console.log('mask.hide');
 	      mask.style.opacity = 0;
 	      setTimeout(function() {
-	        mask.style.display = 'none';
-	        document.body.style.overflowY = null;
+	        if( mask.parentNode ) mask.parentNode.removeChild(mask);
+	        document.body.style.overflowY = '';
 	      }, 200);
 	      return this;
 	    }

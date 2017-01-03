@@ -290,8 +290,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    options = options || {};
 	    
 	    var prev = options.id ? ctx.get(options.id) : null;
+	    
 	    if( prev ) {
-	      load({
+	      return load({
 	        src: options.src,
 	        html: options.html,
 	        el: options.el

@@ -135,10 +135,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  div.style.opacity = 0;
 	  div.style.width = typeof options.width === 'number' ? (options.width + 'px') : options.width;
 	  div.style.height = typeof options.height === 'number' ? (options.height + 'px') : options.height;
+	  div.style.margin = (+options.margin || 0) + 'px auto';
 	  if( options.background ) div.style.background = options.background;
 	  if( options.shadow !== false ) div.style.boxShadow = (typeof options.shadow == 'string') ? options.shadow : '0 5px 15px rgba(0,0,0,.5)';
 	  
-	  div.style.margin = (+options.margin || 0) + 'px auto';
+	  //console.log('height', window.innerHeight || document.documentElement.clientHeight);
+	  
+	  var resizelistener;
+	  if( options.fullsize ) {
+	    div.style.margin = 0;
+	    div.style.width = '100%';
+	    div.style.height = (window.innerHeight || document.documentElement.clientHeight) + 'px';
+	    
+	    resizelistener = function() {
+	      div.style.height = (window.innerHeight || document.documentElement.clientHeight) + 'px';
+	    };
+	    
+	    window.addEventListener('resize', resizelistener);
+	  }
+	  
 	  
 	  container.appendChild(div);
 	  
@@ -196,6 +211,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      
 	      div.style.opacity = 0;
 	      div.style.transform = 'scale(.6,.6)';
+	      
+	      if( resizelistener ) window.removeEventListener('resize', resizelistener);
 	      
 	      setTimeout(function() {
 	        try { document.body.removeChild(container); } catch(e) {}
@@ -317,6 +334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        cls: options.cls,
 	        style: options.style,
 	        background: options.background,
+	        fullsize: options.fullsize,
 	        closebtn: options.closebtn,
 	        closable: options.closable,
 	        shadow: options.shadow,

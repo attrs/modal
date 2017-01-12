@@ -57,7 +57,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ajax = __webpack_require__(1);
 	__webpack_require__(2);
 	
-	var z = 10000;
+	var z = 1000;
 	var mask = (function() {
 	  var mask = document.createElement('div');
 	  mask.setAttribute('class', 'x-modal-mask');

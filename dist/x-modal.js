@@ -117,7 +117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if( options.maskbg !== false ) container.style.background = (typeof options.maskbg == 'string') ? options.maskbg : 'rgba(0,0,0,.5)';
 	  
 	  if( options.closable !== false ) {
-	    container.onmouseup = function(e) {
+	    container.onmousedown = function(e) {
 	      if( (e.target || e.srcElement) !== container ) return;
 	      handle.close();
 	    };

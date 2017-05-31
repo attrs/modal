@@ -7,7 +7,7 @@
   "author": "joje <joje.attrs@gmail.com>",
   "homepage": "https://github.com/attrs/x-modal",
   "scripts": {
-    "prepublish": "gulp"
+    "prepublishOnly": "gulp"
   },
   "license": "MIT",
   "keywords": [],

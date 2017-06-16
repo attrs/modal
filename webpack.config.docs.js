@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
+var pkg = require('./package.json');
 
 var alias = {};
 (function() {
@@ -15,24 +16,15 @@ var alias = {};
   });
 })();
 
+alias[pkg.name] = __dirname;
+
 module.exports = {
-  entry: path.join(__dirname, 'lib/index.js'),
+  entry: {
+    article: path.join(__dirname, 'docs/src/app.js')
+  },
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'xmodal.js',
-    library: 'xmodal',
-    libraryTarget: 'umd',
-    umdNamedDefine: true
-  },
-  node: {
-    console: false,
-    global: false,
-    process: false,
-    Buffer: false,
-    setImmediate: false
-  },
-  resolve: {
-    alias: alias
+    path: path.join(__dirname, 'docs/js'),
+    filename: '[name].js',
   },
   module: {
     loaders: [
@@ -43,14 +35,22 @@ module.exports = {
         test: /\.less$/,
         loader: 'style-loader!css-loader!less-loader'
       }, {
-        test: /\.(jpg|png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(jpg|png|woff|woff2|gif|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'url-loader'
       }, {
         test: /\.html$/,
         loader: 'html-loader'
+      }, {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
       }
     ]
   },
+  resolve: {
+    alias: alias
+  },
   devtool: 'source-map'
 };
-

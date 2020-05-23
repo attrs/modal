@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./lib",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

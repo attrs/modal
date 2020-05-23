@@ -1,10 +1,12 @@
-# x-modal
+# @attrs/modal
 
 ## Installation
 ```sh
-$ npm install x-modal --save
+$ npm install @attrs/modal --save
 ```
 
 ## Usage
 ```javascript
+
 ```
+

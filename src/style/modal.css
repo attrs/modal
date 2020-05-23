@@ -1,0 +1,57 @@
+.x-modal-mask {
+  position: fixed;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  top: 0px;
+  opacity: 1;
+  z-index: 199;
+  overflow: hidden;
+  transition: all 0.25s ease-in-out;
+  background-color: rgba(0,0,0,.5);
+}
+
+.x-modal-container {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  top: 0px;
+  z-index: 201;
+  overflow-y: auto;
+}
+
+.x-modal-body {
+  position: relative;
+  box-sizing: border-box;
+  transition: all 0.15s ease-in-out;
+  transform: scale(0.6, 0.6);
+  opacity: 0;
+  width: 800px;
+  margin: 50px auto;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
+  opacity: .7;
+  transform: scale(.85, .85)
+}
+
+.x-modal-active {
+  opacity: 1;
+  transform: scale(1,1);
+}
+
+.x-modal-willclose {
+  opacity: 0;
+  transform: scale(.6,.6);
+}
+
+@media (max-width: 767px) {
+  .x-modal {
+    transition: all 0.15s ease-in-out;
+    transform: scale(1,1);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    box-shadow: none;
+  }
+}

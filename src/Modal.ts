@@ -59,10 +59,10 @@ export class Modal {
   private static z = 200;
   private static modals: Modal[] = [];
 
-  private readonly id: string;
-  private readonly options: ModalOptions;
-  private readonly container: HTMLElement;
-  private readonly body: HTMLElement;
+  public readonly id: string;
+  public readonly options: ModalOptions;
+  public readonly container: HTMLElement;
+  public readonly body: HTMLElement;
   private readonly resizelistener: () => void;
   private interval;
 
@@ -94,7 +94,8 @@ export class Modal {
 
     if (options.width) div.style.width = typeof options.width === 'number' ? options.width + 'px' : options.width;
     if (options.height) div.style.height = typeof options.height === 'number' ? options.height + 'px' : options.height;
-    if (options.margin) div.style.margin = (+options.margin || 0) + 'px auto';
+    if (options.margin && typeof options.margin === 'string') div.style.margin = options.margin + 'px auto';
+    if (options.margin && typeof options.margin === 'number') div.style.margin = (+options.margin || 0) + 'px auto';
     if (options.background) div.style.background = options.background;
 
     if (options.shadow === false) div.style.boxShadow = 'none';
@@ -125,12 +126,30 @@ export class Modal {
     setTimeout(() => {
       div.classList.add('x-modal-active');
 
-      let showclosebtn = div.querySelectorAll('*[modal-close], .modal-close').length ? false : true;
-      if ('closebtn' in this.options) showclosebtn = options.closebtn;
+      const isclosebtnexist = div.querySelectorAll('*[modal-close], .modal-close').length ? true : false;
 
-      if (showclosebtn) {
+      if (!isclosebtnexist && options.closebtn) {
         const closebtn = document.createElement('div');
         closebtn.className = 'x-modal-close-btn';
+
+        const btnstyle = typeof options.closebtn === 'object' ? options.closebtn : null;
+        if( btnstyle ) {
+          if( typeof btnstyle.top === 'string' ) closebtn.style.top = btnstyle.top;
+          if( typeof btnstyle.top === 'number' ) closebtn.style.top = (+btnstyle.top || 0) + 'px';
+          if( typeof btnstyle.right === 'string' ) closebtn.style.right = btnstyle.right;
+          if( typeof btnstyle.right === 'number' ) closebtn.style.right = (+btnstyle.right || 0) + 'px';
+          if( typeof btnstyle.left === 'string' ) closebtn.style.left = btnstyle.left;
+          if( typeof btnstyle.left === 'number' ) closebtn.style.left = (+btnstyle.left || 0) + 'px';
+          if( typeof btnstyle.bottom === 'string' ) closebtn.style.bottom = btnstyle.bottom;
+          if( typeof btnstyle.bottom === 'number' ) closebtn.style.bottom = (+btnstyle.bottom || 0) + 'px';
+          if( typeof btnstyle.width === 'string' ) closebtn.style.width = btnstyle.width;
+          if( typeof btnstyle.width === 'number' ) closebtn.style.width = (+btnstyle.width || 0) + 'px';
+          if( typeof btnstyle.height === 'string' ) closebtn.style.height = btnstyle.height;
+          if( typeof btnstyle.height === 'number' ) closebtn.style.height = (+btnstyle.height || 0) + 'px';
+          if( typeof btnstyle.opacity === 'string' ) closebtn.style.opacity = btnstyle.opacity;
+          if( typeof btnstyle.opacity === 'number' ) closebtn.style.opacity = btnstyle.opacity + '';
+        }
+
         div.appendChild(closebtn);
         closebtn.onclick = () => this.close();
       }
@@ -139,14 +158,14 @@ export class Modal {
       this.interval = setInterval(() => {
         this.container.querySelectorAll('*[modal-close], .modal-close').forEach((el) => el.addEventListener('click', () => this.close()));
       }, 250);
+    }, 1);
 
-      if (~Modal.modals.indexOf(this)) Modal.modals.splice(Modal.modals.indexOf(this), 1);
-      const current = Modal.modals[Modal.modals.length - 1];
-      Modal.modals.push(this);
+    if (~Modal.modals.indexOf(this)) Modal.modals.splice(Modal.modals.indexOf(this), 1);
+    const current = Modal.modals[Modal.modals.length - 1];
+    Modal.modals.push(this);
 
-      current && current.body.classList.remove('x-modal-active');
-      mask.show();
-    }, 10);
+    current && current.body.classList.remove('x-modal-active');
+    mask.show();
 
     return this;
   }
@@ -188,6 +207,6 @@ export class Modal {
         current && current.open();
       }
       document.body.removeChild(this.container);
-    }, 10);
+    }, 250);
   }
 }

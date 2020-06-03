@@ -1,18 +1,34 @@
 import { object2css } from './object2css';
 import { mask } from './mask';
 
+document.addEventListener('keydown', (e) => {
+  if( e.keyCode === 27 ) {
+    const modal = Modal.current();
+    if( modal ) modal.close();
+  }
+});
+
 export class ModalOptions {
   public id?: string;
   public cls?: string;
   public style?: any;
   public maskbg?: string;
   public closable?: boolean;
-  public width?: string | number;
-  public height?: string | number;
-  public margin?: string;
   public background?: string;
+  public borderRadius?: string | number;
+  public width?: string | number;
+  public minWidth?: string | number;
+  public maxWidth?: string | number;
+  public height?: string | number;
+  public minHeight?: string | number;
+  public maxHeight?: string | number;
+  public top?: string | number;
+  public left?: string | number;
+  public right?: string | number;
+  public bottom?: string | number;
+  public center?: boolean;
   public shadow?: string | boolean;
-  public fullsize?: boolean;
+  public fullscreen?: boolean;
   public closebtn?: boolean;
   public contents?: string | HTMLElement | string[] | HTMLElement[];
 }
@@ -46,7 +62,8 @@ export class Modal {
   }
 
   public static close(id: string) {
-    Modal.modals.find((modal) => modal.id === id)?.close();
+    if (id) Modal.modals.find((modal) => modal.id === id)?.close();
+    else Modal.current()?.close();
     return Modal;
   }
 
@@ -62,7 +79,7 @@ export class Modal {
   public readonly id: string;
   public readonly options: ModalOptions;
   public readonly container: HTMLElement;
-  public readonly body: HTMLElement;
+  public body: HTMLElement;
   private readonly resizelistener: () => void;
   private interval;
 
@@ -70,8 +87,6 @@ export class Modal {
     this.options = options = options || {};
 
     const id = (this.id = options.id || '' + Modal.seq++);
-    const cls = Array.isArray(options.cls) ? options.cls.join(' ') : options.cls;
-    const css = object2css(options.style);
 
     // container
     const container = (this.container = document.createElement('div'));
@@ -88,23 +103,44 @@ export class Modal {
     }
 
     const div = (this.body = document.createElement('div'));
+    const cls = Array.isArray(options.cls) ? options.cls.join(' ') : options.cls;
+    const css = object2css(options.style);
     if (css) div.setAttribute('style', css);
     if (cls) div.className = 'x-modal-body ' + cls;
     else div.setAttribute('class', 'x-modal-body');
 
-    if (options.width) div.style.width = typeof options.width === 'number' ? options.width + 'px' : options.width;
-    if (options.height) div.style.height = typeof options.height === 'number' ? options.height + 'px' : options.height;
-    if (options.margin && typeof options.margin === 'string') div.style.margin = options.margin + 'px auto';
-    if (options.margin && typeof options.margin === 'number') div.style.margin = (+options.margin || 0) + 'px auto';
     if (options.background) div.style.background = options.background;
 
-    if (options.shadow === false) div.style.boxShadow = 'none';
-    else if (options.shadow) div.style.boxShadow = options.shadow as string;
+    if (!options.fullscreen) {
+      if (options.width) div.style.width = typeof options.width === 'number' ? options.width + 'px' : options.width;
+      else {
+        if (options.minWidth) div.style.minWidth = typeof options.minWidth === 'number' ? options.minWidth + 'px' : options.minWidth;
+        if (options.maxWidth) div.style.maxWidth = typeof options.maxWidth === 'number' ? options.maxWidth + 'px' : options.maxWidth;
+      }
+      if (options.height) div.style.height = typeof options.height === 'number' ? options.height + 'px' : options.height;
+      else {
+        if (options.minHeight) div.style.minHeight = typeof options.minHeight === 'number' ? options.minHeight + 'px' : options.minHeight;
+        if (options.maxHeight) div.style.maxHeight = typeof options.maxHeight === 'number' ? options.maxHeight + 'px' : options.maxHeight;
+      }
+      if (options.borderRadius) div.style.borderRadius = typeof options.borderRadius === 'number' ? options.borderRadius + 'px' : options.borderRadius;
+
+      if (!options.center) {
+        if (options.top) div.style.marginTop = typeof options.top === 'number' ? options.top + 'px' : options.top;
+        if (options.left) div.style.marginLeft = typeof options.left === 'number' ? options.left + 'px' : options.left;
+        if (options.right) div.style.marginRight = typeof options.right === 'number' ? options.right + 'px' : options.right;
+        if (options.bottom) div.style.marginBottom = typeof options.bottom === 'number' ? options.bottom + 'px' : options.bottom;
+      }
+
+      if (options.shadow === false) div.style.boxShadow = 'none';
+      else if (typeof options.shadow === 'string') div.style.boxShadow = options.shadow;
+    }
 
     let resizelistener;
-    if (options.fullsize) {
+    if (options.fullscreen) {
       div.style.margin = '0';
+      div.style.maxWidth = '100%';
       div.style.width = '100%';
+      div.style.boxShadow = 'none';
       div.style.height = (window.innerHeight || document.documentElement.clientHeight) + 'px';
 
       resizelistener = () => {
@@ -115,48 +151,60 @@ export class Modal {
     }
 
     container.appendChild(div);
+    document.body.appendChild(this.container);
     if (options.contents) this.contents(options.contents);
   }
 
   public open(): Modal {
-    document.body.appendChild(this.container);
-    const div = this.body;
     const options = this.options;
+    const container = this.container;
+    const div = this.body;
 
     setTimeout(() => {
       div.classList.add('x-modal-active');
 
-      const isclosebtnexist = div.querySelectorAll('*[modal-close], .modal-close').length ? true : false;
-
-      if (!isclosebtnexist && options.closebtn) {
+      // const isclosebtnexist = div.querySelectorAll('*[modal-close], .modal-close').length ? true : false;
+      // if (!isclosebtnexist && options.closebtn) {
+      if (options.closebtn) {
         const closebtn = document.createElement('div');
         closebtn.className = 'x-modal-close-btn';
 
         const btnstyle = typeof options.closebtn === 'object' ? options.closebtn : null;
-        if( btnstyle ) {
-          if( typeof btnstyle.top === 'string' ) closebtn.style.top = btnstyle.top;
-          if( typeof btnstyle.top === 'number' ) closebtn.style.top = (+btnstyle.top || 0) + 'px';
-          if( typeof btnstyle.right === 'string' ) closebtn.style.right = btnstyle.right;
-          if( typeof btnstyle.right === 'number' ) closebtn.style.right = (+btnstyle.right || 0) + 'px';
-          if( typeof btnstyle.left === 'string' ) closebtn.style.left = btnstyle.left;
-          if( typeof btnstyle.left === 'number' ) closebtn.style.left = (+btnstyle.left || 0) + 'px';
-          if( typeof btnstyle.bottom === 'string' ) closebtn.style.bottom = btnstyle.bottom;
-          if( typeof btnstyle.bottom === 'number' ) closebtn.style.bottom = (+btnstyle.bottom || 0) + 'px';
-          if( typeof btnstyle.width === 'string' ) closebtn.style.width = btnstyle.width;
-          if( typeof btnstyle.width === 'number' ) closebtn.style.width = (+btnstyle.width || 0) + 'px';
-          if( typeof btnstyle.height === 'string' ) closebtn.style.height = btnstyle.height;
-          if( typeof btnstyle.height === 'number' ) closebtn.style.height = (+btnstyle.height || 0) + 'px';
-          if( typeof btnstyle.opacity === 'string' ) closebtn.style.opacity = btnstyle.opacity;
-          if( typeof btnstyle.opacity === 'number' ) closebtn.style.opacity = btnstyle.opacity + '';
+        if (btnstyle) {
+          if (typeof btnstyle.top === 'string') closebtn.style.top = btnstyle.top;
+          if (typeof btnstyle.top === 'number') closebtn.style.top = (+btnstyle.top || 0) + 'px';
+          if (typeof btnstyle.right === 'string') closebtn.style.right = btnstyle.right;
+          if (typeof btnstyle.right === 'number') closebtn.style.right = (+btnstyle.right || 0) + 'px';
+          if (typeof btnstyle.left === 'string') closebtn.style.left = btnstyle.left;
+          if (typeof btnstyle.left === 'number') closebtn.style.left = (+btnstyle.left || 0) + 'px';
+          if (typeof btnstyle.bottom === 'string') closebtn.style.bottom = btnstyle.bottom;
+          if (typeof btnstyle.bottom === 'number') closebtn.style.bottom = (+btnstyle.bottom || 0) + 'px';
+          if (typeof btnstyle.width === 'string') closebtn.style.width = btnstyle.width;
+          if (typeof btnstyle.width === 'number') closebtn.style.width = (+btnstyle.width || 0) + 'px';
+          if (typeof btnstyle.height === 'string') closebtn.style.height = btnstyle.height;
+          if (typeof btnstyle.height === 'number') closebtn.style.height = (+btnstyle.height || 0) + 'px';
+          if (typeof btnstyle.opacity === 'string') closebtn.style.opacity = btnstyle.opacity;
+          if (typeof btnstyle.opacity === 'number') closebtn.style.opacity = btnstyle.opacity + '';
+          if (typeof btnstyle.color) closebtn.style.color = btnstyle.color;
         }
 
         div.appendChild(closebtn);
-        closebtn.onclick = () => this.close();
+        closebtn.addEventListener('mousedown', (e) => {
+          if ((e.target || e.srcElement) !== closebtn) return;
+          this.close();
+        });
       }
 
       if (this.interval) clearInterval(this.interval);
       this.interval = setInterval(() => {
-        this.container.querySelectorAll('*[modal-close], .modal-close').forEach((el) => el.addEventListener('click', () => this.close()));
+        this.container.querySelectorAll('*[modal-close], .modal-close').forEach((el) => {
+          if (el.classList.contains('x-modal-close-bind')) return;
+          el.classList.add('x-modal-close-bind');
+          el.addEventListener('mousedown', (e) => {
+            if ((e.target || e.srcElement) !== el) return;
+            this.close();
+          });
+        });
       }, 250);
     }, 1);
 
@@ -207,6 +255,6 @@ export class Modal {
         current && current.open();
       }
       document.body.removeChild(this.container);
-    }, 250);
+    }, 1);
   }
 }

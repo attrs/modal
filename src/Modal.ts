@@ -80,7 +80,6 @@ export class Modal {
   public readonly options: ModalOptions;
   public readonly container: HTMLElement;
   public body: HTMLElement;
-  private readonly resizelistener: () => void;
   private interval;
 
   constructor(options?: ModalOptions) {
@@ -135,20 +134,7 @@ export class Modal {
       else if (typeof options.shadow === 'string') div.style.boxShadow = options.shadow;
     }
 
-    let resizelistener;
-    if (options.fullscreen) {
-      div.style.margin = '0';
-      div.style.maxWidth = '100%';
-      div.style.width = '100%';
-      div.style.boxShadow = 'none';
-      div.style.height = (window.innerHeight || document.documentElement.clientHeight) + 'px';
-
-      resizelistener = () => {
-        div.style.height = (window.innerHeight || document.documentElement.clientHeight) + 'px';
-      };
-
-      window.addEventListener('resize', resizelistener);
-    }
+    if (options.fullscreen) div.classList.add('x-modal-fullscreen');
 
     container.appendChild(div);
     document.body.appendChild(this.container);
@@ -162,9 +148,7 @@ export class Modal {
 
     setTimeout(() => {
       div.classList.add('x-modal-active');
-
-      // const isclosebtnexist = div.querySelectorAll('*[modal-close], .modal-close').length ? true : false;
-      // if (!isclosebtnexist && options.closebtn) {
+      
       if (options.closebtn) {
         const closebtn = document.createElement('div');
         closebtn.className = 'x-modal-close-btn';
@@ -241,8 +225,6 @@ export class Modal {
     const div = this.body;
     div.classList.remove('x-modal-active');
     div.classList.add('x-modal-willclose');
-
-    if (this.resizelistener) window.removeEventListener('resize', this.resizelistener);
 
     setTimeout(() => {
       if (~Modal.modals.indexOf(this)) Modal.modals.splice(Modal.modals.indexOf(this), 1);
